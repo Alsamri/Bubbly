@@ -1,0 +1,30 @@
+{
+  "name": "bubbly",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon --watch backend/src --exec node --loader ts-node/esm backend/src/index.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Alsamri/Bubbly.git"
+  },
+  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Alsamri/Bubbly/issues"
+  },
+  "homepage": "https://github.com/Alsamri/Bubbly#readme",
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "express": "^4.21.2"
+  }
+}
