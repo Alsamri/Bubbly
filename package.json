@@ -4,7 +4,33 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --watch backend/src --exec node --loader ts-node/esm backend/src/index.ts"
+    "dev": "nodemon --watch backend/src --exec node --loader ts-node/esm backend/src/index.ts",
+    "test": "jest",
+    "generate": "prisma generate --schema=backend/prisma/schema.prisma",
+    "migrate": "prisma migrate dev --schema=backend/prisma/schema.prisma",
+    "prisma:seed": "prisma db seed --schema=backend/prisma/schema.prisma"
+  },
+  "jest": {
+    "preset": "ts-jest/presets/default-esm",
+    "testEnvironment": "node",
+    "extensionsToTreatAsEsm": [
+      ".ts"
+    ],
+    "transform": {
+      "^.+\\.ts$": [
+        "ts-jest",
+        {
+          "tsconfig": "tsconfig.jest.json",
+          "useESM": true
+        }
+      ]
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@prisma/client)"
+    ],
+    "moduleNameMapper": {
+      "^(\\.{1,2}/.*)\\.js$": "$1"
+    }
   },
   "repository": {
     "type": "git",
@@ -20,11 +46,23 @@
   "homepage": "https://github.com/Alsamri/Bubbly#readme",
   "devDependencies": {
     "@types/express": "^4.17.21",
+    "@types/jest": "^29.5.14",
+    "@types/jsonwebtoken": "^9.0.9",
+    "@types/supertest": "^6.0.3",
+    "jest": "^29.7.0",
     "nodemon": "^3.1.9",
+    "supertest": "^7.1.0",
+    "ts-jest": "^29.3.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   },
   "dependencies": {
-    "express": "^4.21.2"
+    "@prisma/client": "^6.5.0",
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "prisma": "^6.5.0"
   }
 }
