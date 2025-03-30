@@ -1,9 +1,9 @@
 import request from "supertest";
 import app from "../src/index";
 import prisma from "../src/db/prisma";
-
-describe("User Signup API", () => {
-  beforeAll(async () => {
+import bcryptjs from "bcryptjs";
+describe("User Authentication API", () => {
+  beforeEach(async () => {
     await prisma.user.deleteMany();
   });
 
@@ -11,62 +11,109 @@ describe("User Signup API", () => {
     await prisma.$disconnect();
   });
 
-  it("should successfully register a new user", async () => {
-    const res = await request(app).post("/api/userAuth/signup").send({
-      fullName: "John Doe",
-      username: "johndoe",
-      password: "password123",
-      confirmPassword: "password123",
-      gender: "male",
+  describe("User Signup API", () => {
+    it("should successfully register a new user", async () => {
+      const res = await request(app).post("/api/userAuth/signup").send({
+        fullName: "John Doe",
+        username: "johndoe",
+        password: "password123",
+        confirmPassword: "password123",
+        gender: "male",
+      });
+
+      expect(res.status).toBe(201);
+      expect(res.body).toHaveProperty("id");
+      expect(res.body).toHaveProperty("username", "johndoe");
     });
 
-    expect(res.status).toBe(201);
-    expect(res.body).toHaveProperty("id");
-    expect(res.body).toHaveProperty("username", "johndoe");
+    it("should return error if required fields are missing", async () => {
+      const res = await request(app).post("/api/userAuth/signup").send({
+        username: "johndoe",
+        password: "password123",
+      });
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "please fill in all fields");
+    });
+
+    it("should return error if passwords do not match", async () => {
+      const res = await request(app).post("/api/userAuth/signup").send({
+        fullName: "John Doe",
+        username: "johndoe",
+        password: "password123",
+        confirmPassword: "wrongpassword",
+        gender: "male",
+      });
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "passwords dont match");
+    });
+
+    it("should return error if username already exists", async () => {
+      await request(app).post("/api/userAuth/signup").send({
+        fullName: "John Doe",
+        username: "johndoe",
+        password: "password123",
+        confirmPassword: "password123",
+        gender: "male",
+      });
+
+      const res = await request(app).post("/api/userAuth/signup").send({
+        fullName: "John Doe",
+        username: "johndoe",
+        password: "password123",
+        confirmPassword: "password123",
+        gender: "male",
+      });
+
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "user name already exist");
+    });
   });
 
-  it("should return error if required fields are missing", async () => {
-    const res = await request(app).post("/api/userAuth/signup").send({
-      username: "johndoe",
-      password: "password123",
+  describe("User Login API", () => {
+    beforeEach(async () => {
+      await prisma.user.create({
+        data: {
+          fullName: "John Doe",
+          username: "johndoe",
+          password: await bcryptjs.hash("password123", 10), // Hashed password
+          gender: "male",
+          profilePic: "",
+        },
+      });
     });
 
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error", "please fill in all fields");
-  });
+    it("should successfully log in a user with correct credentials", async () => {
+      const res = await request(app).post("/api/userAuth/login").send({
+        username: "johndoe",
+        password: "password123",
+      });
 
-  it("should return error if passwords do not match", async () => {
-    const res = await request(app).post("/api/userAuth/signup").send({
-      fullName: "John Doe",
-      username: "johndoe",
-      password: "password123",
-      confirmPassword: "wrongpassword",
-      gender: "male",
+      expect(res.status).toBe(200);
+      expect(res.body).toHaveProperty("id");
+      expect(res.body).toHaveProperty("username", "johndoe");
+      expect(res.body).toHaveProperty("profilePic");
     });
 
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error", "passwords dont match");
-  });
+    it("should return error if username does not exist", async () => {
+      const res = await request(app).post("/api/userAuth/login").send({
+        username: "unknownuser",
+        password: "password123",
+      });
 
-  it("should return error if username already exists", async () => {
-    // First request to create the user
-    await request(app).post("/api/userAuth/signup").send({
-      fullName: "John Doe",
-      username: "johndoe",
-      password: "password123",
-      confirmPassword: "password123",
-      gender: "male",
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "invalid credential");
     });
 
-    const res = await request(app).post("/api/userAuth/signup").send({
-      fullName: "John Doe",
-      username: "johndoe",
-      password: "password123",
-      confirmPassword: "password123",
-      gender: "male",
-    });
+    it("should return error if password is incorrect", async () => {
+      const res = await request(app).post("/api/userAuth/login").send({
+        username: "johndoe",
+        password: "wrongpassword",
+      });
 
-    expect(res.status).toBe(400);
-    expect(res.body).toHaveProperty("error", "user name already exist");
+      expect(res.status).toBe(400);
+      expect(res.body).toHaveProperty("error", "invalid credential");
+    });
   });
 });

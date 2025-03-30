@@ -7,11 +7,11 @@ export const login = async (req: Request, res: Response) => {
     const { username, password } = req.body;
     const user = await prisma.user.findUnique({ where: { username } });
     if (!user) {
-      return res.status(400).json({ error: "invalid credintial" });
+      return res.status(400).json({ error: "invalid credential" });
     }
     const isPasswordValid = await bcryptjs.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ error: "invalid credintial" });
+      return res.status(400).json({ error: "invalid credential" });
     }
     generateToken(user.id, res);
     res.status(200).json({
@@ -20,7 +20,7 @@ export const login = async (req: Request, res: Response) => {
       username: user.username,
       profilePic: user.profilePic,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("login error:", error);
     return res.status(500).json({ error: "Internal server error" });
   }
