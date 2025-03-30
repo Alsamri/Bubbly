@@ -4,7 +4,26 @@ import bcryptjs from "bcryptjs";
 import generateToken from "../utils/generatetoken.js";
 export const login = async (req: Request, res: Response) => {
   try {
-  } catch (error) {}
+    const { username, password } = req.body;
+    const user = await prisma.user.findUnique({ where: { username } });
+    if (!user) {
+      return res.status(400).json({ error: "invalid credintial" });
+    }
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(400).json({ error: "invalid credintial" });
+    }
+    generateToken(user.id, res);
+    res.status(200).json({
+      id: user.id,
+      fullName: user.fullName,
+      username: user.username,
+      profilePic: user.profilePic,
+    });
+  } catch (error) {
+    console.error("login error:", error);
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };
 export const logout = async (req: Request, res: Response) => {};
 
