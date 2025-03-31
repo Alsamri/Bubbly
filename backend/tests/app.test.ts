@@ -117,3 +117,13 @@ describe("User Authentication API", () => {
     });
   });
 });
+
+describe("User Logout API", () => {
+  it("should successfully log out a user", async () => {
+    const res = await request(app).post("/api/userAuth/logout");
+
+    expect(res.status).toBe(200);
+    expect(res.body).toHaveProperty("message", "logged out successfully");
+    expect(res.headers["set-cookie"]).toBeDefined();
+  });
+});

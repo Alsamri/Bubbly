@@ -21,11 +21,19 @@ export const login = async (req: Request, res: Response) => {
       profilePic: user.profilePic,
     });
   } catch (error: any) {
-    console.error("login error:", error);
+    console.error("login error:", error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
-export const logout = async (req: Request, res: Response) => {};
+export const logout = async (req: Request, res: Response) => {
+  try {
+    res.cookie("jwt", "", { maxAge: 0 });
+    res.status(200).json({ message: "logged out successfully" });
+  } catch (error: any) {
+    console.error("logout error:", error.message);
+    return res.status(500).json({ error: "Internal server error" });
+  }
+};
 
 export const signup = async (req: Request, res: Response) => {
   try {
@@ -68,8 +76,8 @@ export const signup = async (req: Request, res: Response) => {
     } else {
       res.status(400).json({ error: "invalid user input" });
     }
-  } catch (error) {
-    console.error("Signup error:", error);
+  } catch (error: any) {
+    console.error("Signup error:", error.message);
     return res.status(500).json({ error: "Internal server error" });
   }
 };
