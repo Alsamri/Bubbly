@@ -55,3 +55,31 @@ export const sendMessage = async (req: Request, res: Response) => {
     res.status(500).json({ message: "internal server error" });
   }
 };
+export const fetchMessage = async (req: Request, res: Response) => {
+  try {
+    const { id: userChattingWithId } = req.params;
+    const senderId = req.user.id;
+
+    const convo = await prisma.conversation.findFirst({
+      where: {
+        participantsIds: {
+          hasEvery: [senderId, userChattingWithId],
+        },
+      },
+      include: {
+        messages: {
+          orderBy: {
+            createdAt: "asc",
+          },
+        },
+      },
+    });
+    if (!convo) {
+      return res.status(200).json([]);
+    }
+    res.status(200).json(convo.messages);
+  } catch (error: any) {
+    console.error("error in fetchMessage", error.message);
+    res.status(500).json({ message: "internal server error" });
+  }
+};

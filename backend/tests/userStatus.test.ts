@@ -1,5 +1,5 @@
 import { userStatus } from "../src/controller/authController";
-import { sendMessage } from "../src/controller/messageController";
+import { sendMessage, fetchMessage } from "../src/controller/messageController";
 import prisma from "../src/db/prisma";
 import { Request, Response } from "express";
 
@@ -182,5 +182,69 @@ describe("sendMessage function", () => {
     expect(res.json).toHaveBeenCalledWith({
       message: "Message body is required",
     });
+  });
+});
+describe("fetchMessage function", () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+
+  beforeEach(() => {
+    req = {
+      user: { id: "sender123" },
+      params: { id: "receiver123" },
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  });
+  beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
+
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it("should return 200 with messages if the conversation exists", async () => {
+    const mockMessages = [
+      { id: "msg123", body: "Hello", createdAt: new Date() },
+      { id: "msg124", body: "Hi", createdAt: new Date() },
+    ];
+    const mockConvo = {
+      id: "convo123",
+      participantsIds: ["sender123", "receiver123"],
+      messages: mockMessages,
+    };
+
+    (prisma.conversation.findFirst as jest.Mock).mockResolvedValue(mockConvo);
+
+    await fetchMessage(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockMessages);
+  });
+
+  it("should return 200 with an empty array if no conversation exists", async () => {
+    (prisma.conversation.findFirst as jest.Mock).mockResolvedValue(null);
+
+    await fetchMessage(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith([]);
+  });
+
+  it("should return 500 if an error occurs", async () => {
+    (prisma.conversation.findFirst as jest.Mock).mockRejectedValue(
+      new Error("Database error")
+    );
+
+    await fetchMessage(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: "internal server error" });
   });
 });
