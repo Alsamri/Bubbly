@@ -1,11 +1,16 @@
 import { userStatus } from "../src/controller/authController";
-import { sendMessage, fetchMessage } from "../src/controller/messageController";
+import {
+  sendMessage,
+  fetchMessage,
+  sideBarUsers,
+} from "../src/controller/messageController";
 import prisma from "../src/db/prisma";
 import { Request, Response } from "express";
 
 jest.mock("../src/db/prisma", () => ({
   user: {
     findUnique: jest.fn(),
+    findMany: jest.fn(),
   },
   conversation: {
     findFirst: jest.fn(),
@@ -243,6 +248,58 @@ describe("fetchMessage function", () => {
     );
 
     await fetchMessage(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(500);
+    expect(res.json).toHaveBeenCalledWith({ message: "internal server error" });
+  });
+});
+describe("sideBarUsers function", () => {
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+
+  beforeEach(() => {
+    req = {
+      user: { id: "authUser123" }, // Mock authenticated user ID
+    };
+    res = {
+      status: jest.fn().mockReturnThis(),
+      json: jest.fn(),
+    };
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it("should return 200 with a list of users excluding the authenticated user", async () => {
+    const mockUsers = [
+      { id: "user1", fullName: "Alice Smith", profilePic: "alice.jpg" },
+      { id: "user2", fullName: "Bob Johnson", profilePic: "bob.jpg" },
+    ];
+
+    (prisma.user.findMany as jest.Mock).mockResolvedValue(mockUsers);
+
+    await sideBarUsers(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith(mockUsers);
+  });
+
+  it("should return 200 with an empty list if no other users exist", async () => {
+    (prisma.user.findMany as jest.Mock).mockResolvedValue([]);
+
+    await sideBarUsers(req as Request, res as Response);
+
+    expect(res.status).toHaveBeenCalledWith(200);
+    expect(res.json).toHaveBeenCalledWith([]);
+  });
+
+  it("should return 500 if an error occurs", async () => {
+    (prisma.user.findMany as jest.Mock).mockRejectedValue(
+      new Error("Database error")
+    );
+
+    await sideBarUsers(req as Request, res as Response);
 
     expect(res.status).toHaveBeenCalledWith(500);
     expect(res.json).toHaveBeenCalledWith({ message: "internal server error" });
