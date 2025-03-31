@@ -1,7 +1,9 @@
 import request from "supertest";
 import app from "../src/index";
 import prisma from "../src/db/prisma";
+import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
+
 describe("User Authentication API", () => {
   beforeEach(async () => {
     await prisma.user.deleteMany();
