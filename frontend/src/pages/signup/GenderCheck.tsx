@@ -1,5 +1,3 @@
-import React from "react";
-
 const GenderCheck = () => {
   return (
     <div className="flex mt-3">
