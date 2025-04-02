@@ -31,7 +31,7 @@ const Login = () => {
             href="%"
             className="text-sm hover:underline hover:text-amber-700 mt-2 inline-block"
           >
-            {"Dont't"} have ann account?
+            {"Dont't"} have an account?
           </a>
           <div>
             <button className="btn btn-block btn:sm mt-2">Login</button>
