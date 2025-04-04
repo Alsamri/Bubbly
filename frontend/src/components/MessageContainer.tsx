@@ -4,7 +4,6 @@ import { TiMessages } from "react-icons/ti";
 import useConvo from "../zustand/useConvo";
 import { useAuthContext } from "../context/Authcontext";
 const MessageContainer = () => {
-  const isChat = false;
   const { selectedConvo } = useConvo();
   return (
     <div className="md:min-w-[450px] flex flex-col">
@@ -12,7 +11,9 @@ const MessageContainer = () => {
         <>
           <div className="bg-slate-500 px-4 py-2 mb-2">
             <span className="label-text mr-2">To :</span>
-            <span className="text-gray-900 font-bold">ALO LOLO</span>
+            <span className="text-gray-900 font-bold">
+              {selectedConvo.fullName}
+            </span>
           </div>
           <Messages />
           <MessageInput />
