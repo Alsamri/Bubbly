@@ -3,10 +3,38 @@ import bcryptjs from "bcryptjs";
 import generateToken from "../utils/generatetoken.js";
 export const login = async (req, res) => {
     try {
+        const { username, password } = req.body;
+        const user = await prisma.user.findUnique({ where: { username } });
+        if (!user) {
+            return res.status(400).json({ error: "invalid credential" });
+        }
+        const isPasswordValid = await bcryptjs.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(400).json({ error: "invalid credential" });
+        }
+        generateToken(user.id, res);
+        res.status(200).json({
+            id: user.id,
+            fullName: user.fullName,
+            username: user.username,
+            profilePic: user.profilePic,
+        });
     }
-    catch (error) { }
+    catch (error) {
+        console.error("login error:", error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
 };
-export const logout = async (req, res) => { };
+export const logout = async (req, res) => {
+    try {
+        res.cookie("jwt", "", { maxAge: 0 });
+        res.status(200).json({ message: "logged out successfully" });
+    }
+    catch (error) {
+        console.error("logout error:", error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
 export const signup = async (req, res) => {
     try {
         const { fullName, username, password, confirmPassword, gender } = req.body;
@@ -47,7 +75,25 @@ export const signup = async (req, res) => {
         }
     }
     catch (error) {
-        console.error("Signup error:", error);
+        console.error("Signup error:", error.message);
+        return res.status(500).json({ error: "Internal server error" });
+    }
+};
+export const userStatus = async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+        if (!user) {
+            return res.status(404).json({ error: "user not found" });
+        }
+        res.status(200).json({
+            id: user.id,
+            fullName: user.fullName,
+            username: user.username,
+            profilePic: user.profilePic,
+        });
+    }
+    catch (error) {
+        console.error("userStatus error:", error.message);
         return res.status(500).json({ error: "Internal server error" });
     }
 };

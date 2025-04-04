@@ -266,7 +266,13 @@ describe("sideBarUsers function", () => {
       json: jest.fn(),
     };
   });
+  beforeAll(() => {
+    jest.spyOn(console, "error").mockImplementation(() => {});
+  });
 
+  afterAll(() => {
+    jest.restoreAllMocks();
+  });
   afterEach(() => {
     jest.resetAllMocks();
   });
