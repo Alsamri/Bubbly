@@ -1,4 +1,10 @@
-const GenderCheck = () => {
+const GenderCheck = ({
+  selectGender,
+  handleGenderBox,
+}: {
+  selectGender: string;
+  handleGenderBox: (gender: string) => void;
+}) => {
   return (
     <div className="flex mt-3">
       <div className="form-control mr-2">
@@ -6,8 +12,9 @@ const GenderCheck = () => {
           <span className="label-text">Female</span>
           <input
             type="checkbox"
-            defaultChecked
             className="checkbox checkbox-warning"
+            checked={selectGender === "female"}
+            onChange={() => handleGenderBox("female")}
           />
         </label>
       </div>
@@ -16,8 +23,9 @@ const GenderCheck = () => {
           <span className="label-text">Male</span>
           <input
             type="checkbox"
-            defaultChecked
             className="checkbox checkbox-warning"
+            checked={selectGender === "male"}
+            onChange={() => handleGenderBox("male")}
           />
         </label>
       </div>
