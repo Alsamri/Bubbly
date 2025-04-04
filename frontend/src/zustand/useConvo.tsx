@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-type MessageType = {
+export type MessageType = {
   id: string;
   body: string;
   senderId: string;
 };
 
-type ConversationType = {
+export type ConversationType = {
   id: string;
   fullName: string;
   profilePic: string;
@@ -18,6 +18,7 @@ interface ConversationState {
   setSelectedConvo: (conversation: ConversationType | null) => void;
   setMessages: (messages: MessageType[]) => void;
 }
+
 const useConvo = create<ConversationState>((set) => ({
   selectedConvo: null,
   messages: [],
