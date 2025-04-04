@@ -1,16 +1,17 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ESNext",
-    "moduleResolution": "Node",
-    "outDir": "./backend/dist",
+    "types": ["jest", "node"],
+    "outDir": "./backend/dist-test",
     "rootDir": "./backend",
-    "strict": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "resolveJsonModule": true
+    "baseUrl": ".",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
+    "isolatedModules": true, // Added per ts-jest warning
+    "paths": {
+      "@backend/*": ["./backend/src/*"]
+    }
   },
   "include": ["backend/src/**/*", "backend/tests/**/*"],
-  "exclude": ["node_modules", "frontend"]
+  "exclude": ["node_modules", "**/*.spec.ts"]
 }
