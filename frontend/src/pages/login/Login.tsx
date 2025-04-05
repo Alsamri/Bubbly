@@ -30,7 +30,7 @@ const Login = () => {
             <input
               type="text"
               placeholder="Enter Username"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 text-white border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200  border border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.username}
               onChange={(e) => setInput({ ...input, username: e.target.value })}
             />
@@ -44,7 +44,7 @@ const Login = () => {
             <input
               type="password"
               placeholder="Enter Password"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 text-white border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200  border border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.password}
               onChange={(e) => setInput({ ...input, password: e.target.value })}
             />
