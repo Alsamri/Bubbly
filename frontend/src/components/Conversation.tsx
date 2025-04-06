@@ -7,14 +7,18 @@ const Conversation = ({
   conversation: ConversationType;
   emoji: string;
 }) => {
-  const { setSelectedConvo } = useConvo();
+  const { setSelectedConvo, selectedConvo } = useConvo();
+  const isSelected = selectedConvo?.id === conversation.id;
+  const isOnline = false;
   return (
     <>
       <div
-        className="flex gap-2 items-center hover:bg-amber-600 rounded p-2 py-1 cursor-pointer"
+        className={`flex gap-2 items-center hover:bg-amber-600 rounded p-2 py-1 cursor-pointer ${
+          isSelected ? `bg-amber-600` : ""
+        }`}
         onClick={() => setSelectedConvo(conversation)}
       >
-        <div className="avatar online">
+        <div className={`avatar ${isOnline ? "online" : ""}`}>
           <div className="w-12 rounded-full">
             <img src={conversation.profilePic} alt="userpic"></img>
           </div>
