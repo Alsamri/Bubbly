@@ -5,6 +5,7 @@ import {
   fetchMessage,
   sideBarUsers,
 } from "../controller/messageController.js";
+
 const router = express.Router();
 
 router.post("/send/:id", protectRoute, sendMessage);

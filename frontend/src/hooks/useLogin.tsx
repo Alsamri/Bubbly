@@ -10,15 +10,18 @@ const useLogin = () => {
     try {
       setLoading(true);
       const { data } = await axios.post(
-        "/api/userAuth/login",
+        "http://localhost:9000/api/userAuth/login",
         { username, password },
         {
+          withCredentials: true, // Send cookies with the request
           headers: { "Content-Type": "application/json" },
         }
       );
+      console.log(data);
+
       setAuthUser(data);
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || "Signup failed!";
+      const errorMessage = error?.response?.data?.error || "Login failed!";
 
       toast.error(errorMessage);
     } finally {

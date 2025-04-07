@@ -1,4 +1,5 @@
 import prisma from "../db/prisma.js";
+import { getRecieverSocketId, io } from "../../socket/socket.js";
 export const sendMessage = async (req, res) => {
     try {
         const { message } = req.body;
@@ -44,6 +45,10 @@ export const sendMessage = async (req, res) => {
                 },
             });
         }
+        const recieverSocketId = getRecieverSocketId(recieverId);
+        if (recieverSocketId) {
+            io.to(recieverSocketId).emit("newMessages", newChat);
+        }
         res.status(201).json(newChat);
     }
     catch (error) {
@@ -69,9 +74,8 @@ export const fetchMessage = async (req, res) => {
                 },
             },
         });
-        if (!convo) {
-            return res.status(200).json([]);
-        }
+        if (!convo)
+            return res.status(400).json([]);
         res.status(200).json(convo.messages);
     }
     catch (error) {
@@ -82,6 +86,7 @@ export const fetchMessage = async (req, res) => {
 export const sideBarUsers = async (req, res) => {
     try {
         const authUserId = req.user.id;
+        console.log(authUserId);
         const users = await prisma.user.findMany({
             where: {
                 id: {
@@ -94,7 +99,8 @@ export const sideBarUsers = async (req, res) => {
                 profilePic: true,
             },
         });
-        res.status(200).json(users);
+        console.log(users);
+        return res.status(200).json(users);
     }
     catch (error) {
         console.error("error in sideBarUsers", error.message);

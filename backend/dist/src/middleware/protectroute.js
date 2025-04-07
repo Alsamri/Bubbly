@@ -6,7 +6,7 @@ const protectRoute = async (req, res, next) => {
         if (!token) {
             return res.status(401).json({ error: "unauthorized request" });
         }
-        const decrypt = jwt.verify(token, process.env.JWT_SECRET);
+        const decrypt = jwt.verify(token, process.env.JWT_secret);
         if (!decrypt) {
             return res.status(401).json({ error: "unauthorized request" });
         }
@@ -18,6 +18,10 @@ const protectRoute = async (req, res, next) => {
             return res.status(404).json({ error: "user not found" });
         }
         req.user = user;
+        console.log("Authenticated User ID:", req.user);
+        console.log("Token:", token);
+        console.log("Decrypted Token:", decrypt);
+        console.log("User fetched:", user);
         next();
     }
     catch (error) {

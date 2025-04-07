@@ -35,7 +35,13 @@ export const AuthcontextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchAuthUser = async () => {
       try {
-        const { data } = await axios.get("/api/userAuth/status");
+        const { data } = await axios.get(
+          "http://localhost:9000/api/userAuth/status",
+          {
+            withCredentials: true, // Send cookies with the request
+            headers: { "Content-Type": "application/json" },
+          }
+        );
         setAuthUser(data);
       } catch (error: any) {
         console.error(error);

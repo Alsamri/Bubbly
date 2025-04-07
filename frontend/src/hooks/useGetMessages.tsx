@@ -13,7 +13,17 @@ const useGetMessages = () => {
       setLoading(true);
       setMessages([]);
       try {
-        const { data } = await axios.get(`/api/messages/${selectedConvo.id}`);
+        console.log(selectedConvo);
+
+        const { data } = await axios.get(
+          `http://localhost:9000/api/messages/${selectedConvo.id}`,
+          {
+            withCredentials: true, // Send cookies with the request
+            headers: { "Content-Type": "application/json" },
+          }
+        );
+        console.log(data);
+
         setMessages(data);
       } catch (error: any) {
         const errorMessage = error?.response?.data?.error || "GetConvo failed!";
