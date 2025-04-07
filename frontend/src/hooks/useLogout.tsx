@@ -8,11 +8,14 @@ const useLogout = () => {
   const logout = async () => {
     try {
       setloading(true);
-      const data = await axios.post("/api/userAuth/logout");
+      await axios.post("http://localhost:9000/api/userAuth/logout", {
+        withCredentials: true, // Send cookies with the request
+        headers: { "Content-Type": "application/json" },
+      });
 
       setAuthUser(null);
     } catch (error: any) {
-      const errorMessage = error?.response?.data?.error || "Signup failed!";
+      const errorMessage = error?.response?.data?.error || "logout failed!";
 
       toast.error(errorMessage);
     } finally {

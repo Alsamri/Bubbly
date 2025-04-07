@@ -1,5 +1,5 @@
 import useConvo, { ConversationType } from "../zustand/useConvo";
-
+import { useSocketContext } from "../context/socketContect";
 const Conversation = ({
   conversation,
   emoji,
@@ -9,7 +9,10 @@ const Conversation = ({
 }) => {
   const { setSelectedConvo, selectedConvo } = useConvo();
   const isSelected = selectedConvo?.id === conversation.id;
-  const isOnline = false;
+  const { onlineUsers } = useSocketContext();
+  const isOnline = onlineUsers.includes(conversation.id);
+  console.log(conversation);
+
   return (
     <>
       <div

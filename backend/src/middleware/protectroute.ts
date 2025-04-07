@@ -21,11 +21,12 @@ const protectRoute = async (
 ) => {
   try {
     const token = req.cookies.jwt;
+
     if (!token) {
       return res.status(401).json({ error: "unauthorized request" });
     }
 
-    const decrypt = jwt.verify(token, process.env.JWT_SECRET!) as decodedToken;
+    const decrypt = jwt.verify(token, process.env.JWT_secret!) as decodedToken;
     if (!decrypt) {
       return res.status(401).json({ error: "unauthorized request" });
     }
@@ -40,6 +41,10 @@ const protectRoute = async (
     }
 
     req.user = user;
+    console.log("Authenticated User ID:", req.user);
+    console.log("Token:", token);
+    console.log("Decrypted Token:", decrypt);
+    console.log("User fetched:", user);
 
     next();
   } catch (error: any) {

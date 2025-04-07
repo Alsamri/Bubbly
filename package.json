@@ -4,9 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "cd backend && NODE_OPTIONS='--import ts-node/esm --loader ts-node/esm' node src/listen.ts",
-    "build": "cd backend && tsc",
-    "start": "cd backend && node dist/listen.js",
+    "dev": "cd backend && NODE_OPTIONS='--import ts-node/esm --loader ts-node/esm' node src/index.ts",
+    "build": "tsc && npm install && prisma generate --schema=./backend/prisma/schema.prisma && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "node backend/dist/src/index.js",
     "test": "cross-env NODE_ENV=test jest --runInBand",
     "test:watch": "cross-env NODE_ENV=test NODE_OPTIONS='--experimental-vm-modules --no-warnings' jest --watch",
     "prisma:generate": "prisma generate --schema=backend/prisma/schema.prisma",
@@ -80,6 +80,7 @@
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.5.0"
+    "prisma": "^6.5.0",
+    "socket.io": "^4.8.1"
   }
 }

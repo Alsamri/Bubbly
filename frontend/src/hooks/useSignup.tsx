@@ -17,9 +17,16 @@ const useSignup = () => {
   const signup = async (inputs: signupInputs) => {
     try {
       setloading(true);
-      const { data } = await axios.post("/api/userAuth/signup", inputs, {
-        headers: { "Content-Type": "application/json" },
-      });
+      const { data } = await axios.post(
+        "http://localhost:9000/api/userAuth/signup",
+        inputs,
+        {
+          withCredentials: true, // Send cookies with the request
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+      console.log(data);
+
       setAuthUser(data);
       navigate("/");
     } catch (error: any) {

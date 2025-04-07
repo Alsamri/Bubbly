@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma.js";
-
+import { getRecieverSocketId, io } from "../../socket/socket.js";
 export const sendMessage = async (req: Request, res: Response) => {
   try {
     const { message } = req.body;
@@ -49,6 +49,12 @@ export const sendMessage = async (req: Request, res: Response) => {
         },
       });
     }
+
+    const recieverSocketId = getRecieverSocketId(recieverId);
+
+    if (recieverSocketId) {
+      io.to(recieverSocketId).emit("newMessages", newChat);
+    }
     res.status(201).json(newChat);
   } catch (error: any) {
     console.error("error in sendMessage", error.message);
@@ -74,9 +80,9 @@ export const fetchMessage = async (req: Request, res: Response) => {
         },
       },
     });
-    if (!convo) {
-      return res.status(200).json([]);
-    }
+
+    if (!convo) return res.status(400).json([]);
+
     res.status(200).json(convo.messages);
   } catch (error: any) {
     console.error("error in fetchMessage", error.message);
@@ -87,6 +93,8 @@ export const fetchMessage = async (req: Request, res: Response) => {
 export const sideBarUsers = async (req: Request, res: Response) => {
   try {
     const authUserId = req.user.id;
+    console.log(authUserId);
+
     const users = await prisma.user.findMany({
       where: {
         id: {
@@ -99,7 +107,9 @@ export const sideBarUsers = async (req: Request, res: Response) => {
         profilePic: true,
       },
     });
-    res.status(200).json(users);
+    console.log(users);
+
+    return res.status(200).json(users);
   } catch (error: any) {
     console.error("error in sideBarUsers", error.message);
     res.status(500).json({ message: "internal server error" });
