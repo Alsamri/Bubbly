@@ -9,8 +9,12 @@ const useLogin = () => {
   const login = async (username: string, password: string) => {
     try {
       setLoading(true);
+      const API_BASE_URL =
+        process.env.NODE_ENV !== "development"
+          ? "https://bubbly-q2bp.onrender.com"
+          : "http://localhost:9000";
       const { data } = await axios.post(
-        "http://localhost:9000/api/userAuth/login",
+        `${API_BASE_URL}/api/userAuth/login`,
         { username, password },
         {
           withCredentials: true, // Send cookies with the request

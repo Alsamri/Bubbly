@@ -8,7 +8,7 @@ import { app } from "../socket/socket.js";
 import path from "path";
 app.use(cookieParser());
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow requests from your frontend domain
+  origin: ["http://localhost:5173", "https://bubbly-q2bp.onrender.com"], // Allow requests from your frontend domain
   methods: ["GET", "POST"], // Allow GET and POST methods
   credentials: true, // Allow cookies to be sent
 };

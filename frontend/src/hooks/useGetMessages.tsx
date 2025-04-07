@@ -13,10 +13,12 @@ const useGetMessages = () => {
       setLoading(true);
       setMessages([]);
       try {
-        console.log(selectedConvo);
-
+        const API_BASE_URL =
+          process.env.NODE_ENV !== "development"
+            ? "https://bubbly-q2bp.onrender.com"
+            : "http://localhost:9000";
         const { data } = await axios.get(
-          `http://localhost:9000/api/messages/${selectedConvo.id}`,
+          `${API_BASE_URL}/api/messages/${selectedConvo.id}`,
           {
             withCredentials: true, // Send cookies with the request
             headers: { "Content-Type": "application/json" },

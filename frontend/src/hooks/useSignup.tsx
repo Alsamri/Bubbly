@@ -17,15 +17,18 @@ const useSignup = () => {
   const signup = async (inputs: signupInputs) => {
     try {
       setloading(true);
+      const API_BASE_URL =
+        process.env.NODE_ENV !== "development"
+          ? "https://bubbly-q2bp.onrender.com"
+          : "http://localhost:9000";
       const { data } = await axios.post(
-        "http://localhost:9000/api/userAuth/signup",
+        `${API_BASE_URL}/api/userAuth/signup`,
         inputs,
         {
           withCredentials: true, // Send cookies with the request
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log(data);
 
       setAuthUser(data);
       navigate("/");
