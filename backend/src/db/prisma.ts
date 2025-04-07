@@ -7,5 +7,5 @@ const prisma = new PrismaClient();
 prisma
   .$connect()
   .then(() => console.log("Connected to database"))
-  .catch((err) => console.error("Database connection error:", err));
+  .catch((err: any) => console.error("Database connection error:", err));
 export default prisma;
