@@ -1,5 +1,6 @@
 import useConvo, { ConversationType } from "../zustand/useConvo";
 import { useSocketContext } from "../context/socketContect";
+
 const Conversation = ({
   conversation,
   emoji,
@@ -11,29 +12,37 @@ const Conversation = ({
   const isSelected = selectedConvo?.id === conversation.id;
   const { onlineUsers } = useSocketContext();
   const isOnline = onlineUsers.includes(conversation.id);
-  console.log(conversation);
 
   return (
     <>
       <div
-        className={`flex gap-2 items-center hover:bg-amber-600 rounded p-2 py-1 cursor-pointer ${
-          isSelected ? `bg-amber-600` : ""
+        className={`flex items-center gap-3 px-3 py-2 rounded-lg cursor-pointer transition-colors duration-200 ${
+          isSelected ? "bg-amber-600" : "hover:bg-amber-700/50"
         }`}
         onClick={() => setSelectedConvo(conversation)}
       >
-        <div className={`avatar ${isOnline ? "online" : ""}`}>
-          <div className="w-12 rounded-full">
-            <img src={conversation.profilePic} alt="userpic"></img>
+        {/* Avatar */}
+        <div className={`relative avatar ${isOnline ? "online" : ""}`}>
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full overflow-hidden">
+            <img
+              src={conversation.profilePic}
+              alt="userpic"
+              className="w-full h-full object-cover"
+            />
           </div>
         </div>
-        <div className="flex flex-col flex-1">
-          <div className="flex gap-3 justify-between">
-            <p className="font-bold text-gray-200">{conversation.fullName}</p>
-            <span className="text-xl hidden md:inline-block">{emoji}</span>
+
+        {/* Info */}
+        <div className="flex flex-col flex-1 min-w-0">
+          <div className="flex justify-between items-center">
+            <p className="font-semibold text-gray-100 text-sm sm:text-base truncate">
+              {conversation.fullName}
+            </p>
+            <span className="text-lg">{emoji}</span>
           </div>
         </div>
       </div>
-      <div className="divider my-0 py-0 h-1" />
+      <div className="divider my-0 py-0 h-[1px] bg-gray-700/50" />
     </>
   );
 };

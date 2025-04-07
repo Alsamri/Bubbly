@@ -23,7 +23,6 @@ const useGetConvo = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log(data);
 
         if (!Array.isArray(data)) {
           throw new Error("Invalid response format");

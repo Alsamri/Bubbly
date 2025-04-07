@@ -35,8 +35,12 @@ export const AuthcontextProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     const fetchAuthUser = async () => {
       try {
+        const API_BASE_URL =
+          process.env.NODE_ENV !== "development"
+            ? "https://bubbly-q2bp.onrender.com"
+            : "http://localhost:9000";
         const { data } = await axios.get(
-          "http://localhost:9000/api/userAuth/status",
+          `${API_BASE_URL}/api/userAuth/status`,
           {
             withCredentials: true, // Send cookies with the request
             headers: { "Content-Type": "application/json" },

@@ -18,10 +18,6 @@ const protectRoute = async (req, res, next) => {
             return res.status(404).json({ error: "user not found" });
         }
         req.user = user;
-        console.log("Authenticated User ID:", req.user);
-        console.log("Token:", token);
-        console.log("Decrypted Token:", decrypt);
-        console.log("User fetched:", user);
         next();
     }
     catch (error) {

@@ -2,30 +2,33 @@ import { IoSearch } from "react-icons/io5";
 import { useCallback, useState } from "react";
 import toast from "react-hot-toast";
 import useConvo, { ConversationType } from "../zustand/useConvo";
-import useGetConvo from "../hooks/useGetConvo";
+
 import { debounce } from "lodash";
+import useAllUsers from "../hooks/useAllUsers";
+import { useAuthContext } from "../context/Authcontext"; // Import the AuthContext
+
 const Searchbar = () => {
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState<string>("");
   const [filteredUsers, setFilteredUsers] = useState<ConversationType[]>([]);
   const { setSelectedConvo } = useConvo();
-  const { conversations: users, loading } = useGetConvo();
+  const { users, loading } = useAllUsers();
+  const { authUser } = useAuthContext();
 
-  // Debounce search to prevent rapid firing
   const handleSearchChange = useCallback(
     debounce((query: string) => {
-      if (!query || query.length < 3) {
+      if (!query) {
         setFilteredUsers([]);
         return;
       }
 
-      const matches = users.filter(
+      const filtered = users.filter(
         (user) =>
-          user.fullName.toLowerCase().includes(query) ||
-          user.username.toLowerCase().includes(query)
+          user.id !== authUser?.id &&
+          user.fullName.toLowerCase().includes(query)
       );
-      setFilteredUsers(matches);
+      setFilteredUsers(filtered);
     }, 300),
-    [users]
+    [users, authUser]
   );
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -44,16 +47,16 @@ const Searchbar = () => {
     e.preventDefault();
     const query = search.trim().toLowerCase();
 
-    if (!query || query.length < 3) {
-      toast.error("Search requires at least 3 characters");
+    if (!query) {
+      toast.error("Please enter a valid search term");
       return;
     }
 
     try {
       const match = users.find(
         (user) =>
-          user.fullName.toLowerCase().includes(query) ||
-          user.username.toLowerCase().includes(query)
+          user.id !== authUser?.id &&
+          user.fullName.toLowerCase().includes(query)
       );
 
       if (match) {
@@ -61,7 +64,7 @@ const Searchbar = () => {
       } else {
         toast.error("No user found");
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error("Search error:", error);
       toast.error("Search failed");
     }
@@ -70,47 +73,43 @@ const Searchbar = () => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex flex-col relative items-center gap-2"
+      className="relative flex flex-col items-center gap-2 w-full"
     >
       <div className="relative w-full">
+        {/* Search Input */}
         <input
           type="text"
-          placeholder="Search.."
-          className="input input-bordered rounded-full w-full"
+          placeholder="Search for users..."
+          className="input input-bordered w-full rounded-full pl-10 pr-4 py-2 text-sm text-gray-800 bg-gray-100 focus:outline-none focus:ring-2 focus:ring-amber-600"
           value={search}
           onChange={handleInputChange}
           disabled={loading}
         />
+        {/* Search Icon */}
+        <IoSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-5 h-5" />
+
         {/* Dropdown results */}
         {filteredUsers.length > 0 && (
-          <ul className="absolute z-10 w-full bg-white border rounded-md shadow-lg mt-1 max-h-60 overflow-auto">
+          <ul className="absolute z-10 w-full bg-gray-200 border rounded-md shadow-lg mt-1 max-h-60 overflow-auto rounded-b-lg">
             {filteredUsers.map((user) => (
               <li
                 key={user.id}
-                className="cursor-pointer p-2 hover:bg-gray-200"
+                className="cursor-pointer p-3 hover:bg-gray-200 flex items-center gap-3"
                 onClick={() => handleSelectUser(user)}
               >
-                <div className="flex items-center gap-2">
-                  <img
-                    src={user.profilePic}
-                    alt={user.fullName}
-                    className="w-8 h-8 rounded-full"
-                  />
-                  <span>{user.fullName}</span>
-                </div>
+                <img
+                  src={user.profilePic}
+                  alt={user.fullName}
+                  className="w-8 h-8 rounded-full object-cover"
+                />
+                <span className="text-sm text-gray-800">{user.fullName}</span>
               </li>
             ))}
           </ul>
         )}
       </div>
-      <button
-        type="submit"
-        className="btn btn-circle bg-amber-600 text-white"
-        disabled={loading}
-      >
-        <IoSearch className="w-6 h-6 outline-none" />
-      </button>
     </form>
   );
 };
+
 export default Searchbar;

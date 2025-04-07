@@ -24,7 +24,6 @@ const useGetMessages = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log(data);
 
         setMessages(data);
       } catch (error: any) {

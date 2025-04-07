@@ -10,16 +10,18 @@ export const sendMessage = async (req, res) => {
         }
         let convo = await prisma.conversation.findFirst({
             where: {
-                participantsIds: {
-                    hasEvery: [senderId, recieverId],
+                participants: {
+                    some: {
+                        id: { in: [senderId, recieverId] },
+                    },
                 },
             },
         });
         if (!convo) {
             convo = await prisma.conversation.create({
                 data: {
-                    participantsIds: {
-                        set: [senderId, recieverId],
+                    participants: {
+                        connect: [{ id: senderId }, { id: recieverId }],
                     },
                 },
             });
@@ -33,14 +35,10 @@ export const sendMessage = async (req, res) => {
         });
         if (newChat) {
             convo = await prisma.conversation.update({
-                where: {
-                    id: convo.id,
-                },
+                where: { id: convo.id },
                 data: {
                     messages: {
-                        connect: {
-                            id: newChat.id,
-                        },
+                        connect: { id: newChat.id },
                     },
                 },
             });
@@ -53,7 +51,7 @@ export const sendMessage = async (req, res) => {
     }
     catch (error) {
         console.error("error in sendMessage", error.message);
-        res.status(500).json({ message: "internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 export const fetchMessage = async (req, res) => {
@@ -62,8 +60,10 @@ export const fetchMessage = async (req, res) => {
         const senderId = req.user.id;
         const convo = await prisma.conversation.findFirst({
             where: {
-                participantsIds: {
-                    hasEvery: [senderId, userChattingWithId],
+                participants: {
+                    some: {
+                        id: { in: [senderId, userChattingWithId] },
+                    },
                 },
             },
             include: {
@@ -80,30 +80,55 @@ export const fetchMessage = async (req, res) => {
     }
     catch (error) {
         console.error("error in fetchMessage", error.message);
-        res.status(500).json({ message: "internal server error" });
+        res.status(500).json({ message: "Internal server error" });
     }
 };
 export const sideBarUsers = async (req, res) => {
     try {
         const authUserId = req.user.id;
-        console.log(authUserId);
-        const users = await prisma.user.findMany({
+        const conversations = await prisma.conversation.findMany({
             where: {
-                id: {
-                    not: authUserId,
+                participants: {
+                    some: {
+                        id: authUserId,
+                    },
                 },
             },
+            include: {
+                participants: {
+                    select: {
+                        id: true,
+                        fullName: true,
+                        profilePic: true,
+                    },
+                },
+            },
+        });
+        const participants = conversations.flatMap((convo) => convo.participants.filter((user) => user.id !== authUserId));
+        const uniqueParticipants = Array.from(new Map(participants.map((user) => [user.id, user])).values());
+        res.status(200).json(uniqueParticipants);
+    }
+    catch (error) {
+        console.error("Error in sideBarUsers:", error.message);
+        res.status(500).json({ message: "Internal server error in sidebar users" });
+    }
+};
+export const allUsers = async (req, res) => {
+    try {
+        // Fetch all users from the database
+        const users = await prisma.user.findMany({
             select: {
                 id: true,
                 fullName: true,
                 profilePic: true,
             },
         });
-        console.log(users);
-        return res.status(200).json(users);
+        res.status(200).json(users);
     }
     catch (error) {
-        console.error("error in sideBarUsers", error.message);
-        res.status(500).json({ message: "internal server error" });
+        console.error("Error in allUsers:", error.message);
+        res
+            .status(500)
+            .json({ message: "Internal server error in fetching users" });
     }
 };
