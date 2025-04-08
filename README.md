@@ -5,6 +5,12 @@ A real-time messaging application built with React and Node.js.
 **Live Demo:** [https://bubbly-q2bp.onrender.com](https://bubbly-q2bp.onrender.com)  
 **Repository:** [https://github.com/Alsamri/Bubbly](https://github.com/Alsamri/Bubbly)
 
+**Upcoming Features:**
+
+Add friend button functionality
+Change from showing all registered users to only displaying contacts you've chatted with
+Video and voice call integration
+
 ## Tech Stack
 
 ### Frontend
