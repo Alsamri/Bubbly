@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import useConvo from "../zustand/useConvo";
 import axios from "axios";
-import toast from "react-hot-toast";
 
 const useGetMessages = () => {
   const [loading, setLoading] = useState(false);
