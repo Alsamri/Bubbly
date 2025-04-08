@@ -41,10 +41,6 @@ const protectRoute = async (
     }
 
     req.user = user;
-    console.log("Authenticated User ID:", req.user);
-    console.log("Token:", token);
-    console.log("Decrypted Token:", decrypt);
-    console.log("User fetched:", user);
 
     next();
   } catch (error: any) {

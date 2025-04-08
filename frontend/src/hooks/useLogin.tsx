@@ -21,7 +21,6 @@ const useLogin = () => {
           headers: { "Content-Type": "application/json" },
         }
       );
-      console.log(data);
 
       setAuthUser(data);
     } catch (error: any) {

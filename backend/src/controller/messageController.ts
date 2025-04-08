@@ -107,7 +107,6 @@ export const sideBarUsers = async (req: Request, res: Response) => {
         profilePic: true,
       },
     });
-    console.log(users);
 
     return res.status(200).json(users);
   } catch (error: any) {

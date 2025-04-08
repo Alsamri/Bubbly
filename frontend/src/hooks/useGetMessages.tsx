@@ -9,7 +9,9 @@ const useGetMessages = () => {
 
   useEffect(() => {
     const getMessages = async () => {
-      if (!selectedConvo) return;
+      if (!selectedConvo) {
+        return;
+      }
       setLoading(true);
       setMessages([]);
       try {
@@ -24,13 +26,10 @@ const useGetMessages = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log(data);
 
         setMessages(data);
       } catch (error: any) {
-        const errorMessage = error?.response?.data?.error || "GetConvo failed!";
-
-        toast.error(errorMessage);
+        error?.response?.data?.error;
       }
     };
     getMessages();

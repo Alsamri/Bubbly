@@ -8,7 +8,7 @@ import {
 
 const router = express.Router();
 
+router.get("/conversations", protectRoute, sideBarUsers);
 router.post("/send/:id", protectRoute, sendMessage);
 router.get("/:id", protectRoute, fetchMessage);
-router.get("/conversations", protectRoute, sideBarUsers);
 export default router;

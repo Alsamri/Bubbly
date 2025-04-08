@@ -7,21 +7,51 @@ const Message = ({ message }: { message: MessageType }) => {
   const { selectedConvo } = useConvo();
   const fromMe = message?.senderId === authUser?.id;
   const img = fromMe ? authUser?.profilePic : selectedConvo?.profilePic;
-  const chatClass = fromMe ? "chat-end" : "chat-start";
-  const bubbleBg = fromMe ? "bg-amber-700" : "";
+
   return (
-    <div className={`chat ${chatClass}`}>
-      <div className="hidden md:block chat-image avatar">
-        <div className="w-6 md:w-10 rounded-full">
-          <img alt="Tailwind CSS chat bubble component" src={img} />
+    <div
+      className={`flex items-end gap-2 px-4 py-1 ${
+        fromMe ? "justify-end" : "justify-start"
+      }`}
+    >
+      {/* Avatar on left if not from me */}
+      {!fromMe && (
+        <img
+          src={img}
+          alt="avatar"
+          className="w-8 h-8 rounded-full object-cover hidden sm:block"
+        />
+      )}
+
+      <div className="flex flex-col max-w-[80%]">
+        <div
+          className={`rounded-2xl px-4 py-2 text-sm sm:text-base break-words shadow-md ${
+            fromMe
+              ? "bg-amber-500 text-white rounded-br-none"
+              : "bg-white/90 text-gray-800 rounded-bl-none"
+          }`}
+        >
+          {message.body}
         </div>
+        <span
+          className={`text-xs mt-1 ${
+            fromMe
+              ? "text-white/70 text-right pr-1"
+              : "text-gray-500 text-left pl-1"
+          }`}
+        >
+          {timeFormat(message.createdAt)}
+        </span>
       </div>
-      <p className={`chat-bubble text-white ${bubbleBg} text-sm md:text-md`}>
-        {message.body}
-      </p>
-      <span className="chat-footer opacity-50 text-xs flex gap-1 items-start">
-        {timeFormat(message.createdAt)}
-      </span>
+
+      {/* Avatar on right if from me */}
+      {fromMe && (
+        <img
+          src={img}
+          alt="avatar"
+          className="w-8 h-8 rounded-full object-cover hidden sm:block"
+        />
+      )}
     </div>
   );
 };

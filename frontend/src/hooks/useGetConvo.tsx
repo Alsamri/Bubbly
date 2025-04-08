@@ -23,7 +23,6 @@ const useGetConvo = () => {
             headers: { "Content-Type": "application/json" },
           }
         );
-        console.log(data);
 
         if (!Array.isArray(data)) {
           throw new Error("Invalid response format");
@@ -31,10 +30,7 @@ const useGetConvo = () => {
 
         setConversations(data);
       } catch (error: any) {
-        if (!axios.isCancel(error)) {
-          console.error("Fetch error:", error);
-          toast.error(error.response?.data?.error || "Failed to load users");
-        }
+        toast.error(error.response?.data?.error || "Failed to load users");
       } finally {
         setLoading(false);
       }

@@ -15,8 +15,8 @@ const usePostMessage = () => {
           ? "https://bubbly-q2bp.onrender.com"
           : "http://localhost:9000";
       const { data } = await axios.post(
-        `${API_BASE_URL}/api/messages"/send/${selectedConvo.id}`,
-        message,
+        `${API_BASE_URL}/api/messages/send/${selectedConvo.id}`,
+        { message },
         {
           withCredentials: true, // Send cookies with the request
           headers: { "Content-Type": "application/json" },
