@@ -1,5 +1,5 @@
 import request from "supertest";
-import { app } from "../socket/socket";
+import { app } from "../socket/socket.js";
 import prisma from "../src/db/prisma";
 import bcryptjs from "bcryptjs";
 
