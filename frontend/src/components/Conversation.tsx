@@ -20,11 +20,15 @@ const Conversation = ({
         }`}
         onClick={() => setSelectedConvo(conversation)}
       >
-        <div className={`avatar ${isOnline ? "online" : ""}`}>
-          <div className="w-12 rounded-full">
-            <img src={conversation.profilePic} alt="userpic"></img>
+        <div className={`avatar relative ${isOnline ? "" : ""}`}>
+          <div className="w-12 h-12 rounded-full ">
+            <img src={conversation.profilePic} alt="userpic" />
           </div>
+          {isOnline && (
+            <div className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2" />
+          )}
         </div>
+
         <div className="flex flex-col flex-1">
           <div className="flex gap-3 justify-between">
             <p className="font-bold text-gray-200">{conversation.fullName}</p>

@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
   }
 
   if (userId) userSocketMap[userId] = socket.id;
-
+  console.log("Online users list:", Object.keys(userSocketMap));
   //io.omit() is used to send anything to connected clients
   io.emit("getOnlineUsers", Object.keys(userSocketMap));
 

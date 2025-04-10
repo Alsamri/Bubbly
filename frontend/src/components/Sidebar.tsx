@@ -3,7 +3,7 @@ import Conversationlist from "./Conversationlist";
 import LogoutBtn from "./LogoutBtn";
 const Sidebar = () => {
   return (
-    <div className="border-r border-slate-500 p-4 flex-col">
+    <div className="border-r border-slate-500 p-4 flex-col h-full max-h-screen overflow-auto">
       <Searchbar />
       <div className="divider px-3"></div>
       <Conversationlist />
