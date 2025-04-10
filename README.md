@@ -44,12 +44,12 @@ Video and voice call integration
 
 ```bash
 # Backend
-cd server
 npm install
+cd backend
 npm run dev
 
 # Frontend
-cd client
+cd frontend
 npm install
 npm run dev
 ```
