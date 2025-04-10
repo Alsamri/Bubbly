@@ -29,7 +29,7 @@ Video and voice call integration
 
 1. Clone the repository
 2. Install dependencies in both client and server directories
-3. Set up your PostgreSQL database
+3. Set up your PostgreSQL database using Prisma generate
 4. Configure environment variables
 5. Run the development servers
 
