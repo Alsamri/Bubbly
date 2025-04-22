@@ -39,7 +39,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Enter your name :)"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200 border text-gray-900 border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.fullName}
               onChange={(e) => setInput({ ...input, fullName: e.target.value })}
             />
@@ -54,7 +54,7 @@ const Signup = () => {
             <input
               type="text"
               placeholder="Enter your Username"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200 border text-gray-900 border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.username}
               onChange={(e) => setInput({ ...input, username: e.target.value })}
             />
@@ -69,7 +69,7 @@ const Signup = () => {
             <input
               type="password"
               placeholder="Enter password"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200 border text-gray-900 border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.password}
               onChange={(e) => setInput({ ...input, password: e.target.value })}
             />
@@ -84,7 +84,7 @@ const Signup = () => {
             <input
               type="password"
               placeholder="Re-type password"
-              className="w-full h-10 px-3 rounded-md bg-gray-200 border border-gray-600 focus:outline-none focus:border-amber-700"
+              className="w-full h-10 px-3 rounded-md bg-gray-200 border text-gray-900 border-gray-600 focus:outline-none focus:border-amber-700"
               value={input.confirmPassword}
               onChange={(e) =>
                 setInput({ ...input, confirmPassword: e.target.value })
