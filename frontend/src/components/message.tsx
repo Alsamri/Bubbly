@@ -7,6 +7,7 @@ const Message = ({ message }: { message: MessageType }) => {
   const { selectedConvo } = useConvo();
   const fromMe = message?.senderId === authUser?.id;
   const img = fromMe ? authUser?.profilePic : selectedConvo?.profilePic;
+  const shouldShake = message.shouldShake ? "shake" : "";
 
   return (
     <div
@@ -14,7 +15,6 @@ const Message = ({ message }: { message: MessageType }) => {
         fromMe ? "justify-end" : "justify-start"
       }`}
     >
-      {/* Avatar on left if not from me */}
       {!fromMe && (
         <img
           src={img}
@@ -28,7 +28,7 @@ const Message = ({ message }: { message: MessageType }) => {
           className={`rounded-2xl px-4 py-2 text-sm sm:text-base break-words shadow-md ${
             fromMe
               ? "bg-amber-500 text-white rounded-br-none"
-              : "bg-white/90 text-gray-800 rounded-bl-none"
+              : `bg-white/90 ${shouldShake} text-gray-800 rounded-bl-none`
           }`}
         >
           {message.body}
@@ -37,14 +37,13 @@ const Message = ({ message }: { message: MessageType }) => {
           className={`text-xs mt-1 ${
             fromMe
               ? "text-white/70 text-right pr-1"
-              : "text-gray-500 text-left pl-1"
+              : "text-white/70 text-left pl-1"
           }`}
         >
           {timeFormat(message.createdAt)}
         </span>
       </div>
 
-      {/* Avatar on right if from me */}
       {fromMe && (
         <img
           src={img}
