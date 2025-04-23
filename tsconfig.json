@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node", // Change this to Node (instead of Node16 or NodeNext)
+    "moduleResolution": "Node",
     "outDir": "./backend/dist",
     "rootDir": "./backend",
     "strict": true,
