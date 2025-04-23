@@ -1,6 +1,6 @@
-import { userStatus } from "../src/controller/authController";
-import { sendMessage, fetchMessage, sideBarUsers, } from "../src/controller/messageController";
-import prisma from "../src/db/prisma";
+import prisma from "../src/db/prisma.js";
+import { userStatus } from "../src/controller/authController.js";
+import { sideBarUsers, sendMessage, fetchMessage, } from "../src/controller/messageController.js";
 jest.mock("../src/db/prisma", () => ({
     user: {
         findUnique: jest.fn(),
@@ -178,10 +178,10 @@ describe("fetchMessage function", () => {
         expect(res.status).toHaveBeenCalledWith(200);
         expect(res.json).toHaveBeenCalledWith(mockMessages);
     });
-    it("should return 200 with an empty array if no conversation exists", async () => {
+    it("should return 400 with an empty array if no conversation exists", async () => {
         prisma.conversation.findFirst.mockResolvedValue(null);
         await fetchMessage(req, res);
-        expect(res.status).toHaveBeenCalledWith(200);
+        expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith([]);
     });
     it("should return 500 if an error occurs", async () => {

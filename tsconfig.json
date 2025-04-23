@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
+    "target": "ESNext",
     "module": "ESNext",
-    "moduleResolution": "Node",
+    "moduleResolution": "Node", // Change this to Node (instead of Node16 or NodeNext)
     "outDir": "./backend/dist",
     "rootDir": "./backend",
     "strict": true,

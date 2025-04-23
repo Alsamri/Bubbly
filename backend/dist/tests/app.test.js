@@ -1,6 +1,6 @@
 import request from "supertest";
-import { app } from "../socket/socket";
-import prisma from "../src/db/prisma";
+import app from "../src/index.js";
+import prisma from "../src/db/prisma.js";
 import bcryptjs from "bcryptjs";
 describe("User Authentication API", () => {
     beforeEach(async () => {
