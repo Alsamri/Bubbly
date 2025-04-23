@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../db/prisma.js";
-import { getRecieverSocketId, io } from "../../socket/socket.js";
+import { getRecieverSocketId } from "../../socket/socket.js";
+import { io } from "../../server.js";
 export const sendMessage = async (req: Request, res: Response) => {
   try {
     const { message } = req.body;
@@ -93,7 +94,6 @@ export const fetchMessage = async (req: Request, res: Response) => {
 export const sideBarUsers = async (req: Request, res: Response) => {
   try {
     const authUserId = req.user.id;
-    console.log(authUserId);
 
     const users = await prisma.user.findMany({
       where: {
